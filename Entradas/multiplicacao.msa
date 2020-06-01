@@ -1,0 +1,62 @@
+MULTIPLICACAO:	LOAD ZERO
+        		COPY R0         ;Coloca 0 no registrador 0
+		        COPY R4         ;Coloca 0 no registrador 4
+		        COPY R3         ;Coloca 0 no registrador 3
+		        XCH R1          ;Le o primeiro numero
+		        JNN J1			;Se nao for negativo, pula para a proxima parte
+		        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+		        ;Pega o modulo do primeiro numero
+		        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+		        COPY R1         ;Se for negativo, copia o numero para R1
+		        SUB R1          ;Acumulador = 0
+		        SUB R1          ;Acumulador = -R1
+		        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+		        ;Marca o flag R0, que indica o sinal do resultado
+		        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+		        XCH R0          ;Acumulador = R0
+		        NOT             ;R0 inidica que o primeiro numero e negativo
+		        XCH R0          ;Acumulador = -R1
+J1:     		COPY R1         ;R1 = Modulo de R1
+		        XCH R2          ;Le o segundo numero
+		        JNN J2			;Se nao for negativo, pula para o loop da multiplicacao
+		        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+		        ;Pega o modulo do segundo numero
+		        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+		        COPY R2         ;Se for negativo, copia o numero para R2
+		        SUB R2          ;Acumulador = 0
+		        SUB R2          ;Acumulador = -R2
+		        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+		        ;Marca o flag R0, que indica o sinal do resultado
+		        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+		        XCH R0          ;Acumulador = R0
+		        NOT             ;R0 inidica que o segundo numero e negativo
+		        XCH R0          ;Acumulador = -R2
+J2:     		COPY R2         ;R2 = Modulo de R2
+		        ADD R3          ;ADD para viabilizar o Jump
+		        JZ FIM          ;Se o acumulador for 0, pula para o fim
+		        LOAD UM
+		        COPY R3         ;Coloca 1 no registrador 3
+		        XCH R2          ;Coloca R2 no acumulador
+LOOP:   		JZ FIM          ;Se o acumulador for 0, pula para o fim
+		        SUB R3          ;Subtrai 1 do acumulador
+		        XCH R4          ;Pega o valor de R4, que guarda o resultado final
+		        ADD R1          ;Adiciona o valor do primeiro numero
+		        XCH R4          ;Devolve o valor para R4
+		        JMP LOOP        ;Jump incondicional para o LOOP
+		        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+		        ;Troca o sinal, se a resposta for negativa
+		        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+FIM:    		XCH R0          ;Pega o valor de R0, que indica se o resultado deve ser negativo ou positivo
+		        JZ END          ;Se indicar que deve ser positivo, pula para o final
+		        LOAD ZERO       ;Se for negativo, coloca 0 no acumulador
+		        SUB R4          ;Acumulador = -R4
+		        COPY R4         ;R4 = -R4
+END:    		XCH R4          ;Acumulador = Resultado em R4
+		        RET
+
+;;;;;;;;;;;;
+;Constantes;
+;;;;;;;;;;;;		       
+ZERO:   		WORD 0
+UM:     		WORD 1
+        		END

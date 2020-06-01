@@ -1,0 +1,4 @@
+SUBTRACAO:	XCH R1
+			SUB R2
+			RET
+			END

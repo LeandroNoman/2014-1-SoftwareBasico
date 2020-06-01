@@ -1,0 +1,88 @@
+DIVISAO:        LOAD DZERO
+                COPY R0     ;Coloca 0 em R0
+                COPY R4     ;Coloca 0 em R4, que guarda o resultado final
+                LOAD DUM
+                COPY R3     ;Coloca 1 em R3
+                XCH R1      ;Le o primeiro operando
+                JNN D1      ;Se o numero nao for negativo, pula para D1
+        		
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                ;Pega o modulo do primeiro numero
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                COPY R1     ;Coloca o primeiro perando em R1
+                SUB R1
+                SUB R1
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                ;Marca o flag R0, que indica o sinal do resultado
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                XCH R0      ;Acumulador = R0
+                NOT         ;R0 inidica que o primeiro numero e negativo
+                XCH R0      ;Acumulador = -R1
+                ;Grava a informacao que o primeiro operando e negativo
+                PUSH
+                LOAD DUM
+                STORE PRIMEIRO
+                POP
+
+D1:             COPY R1     ;Coloca o primeiro perando em R1
+                XCH R2      ;Le o segundo operando
+                JNN D2      ;Pula para D2, se o numero nao for negativo
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                ;Pega o modulo do segundo numero
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                COPY R2     ;Copia o segundo operando para R2
+                SUB R2
+                SUB R2
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                ;Marca o flag R0, que indica o sinal do resultado
+                ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                XCH R0      ;Acumulador = R0
+                NOT         ;R0 inidica que o segundo numero e negativo
+                XCH R0      ;Acumulador = -R2
+
+D2:             COPY R2     ;Copia o segundo operando para R2
+                XCH R1      ;R1 = R2
+                JZ FDIV     ;Pula para o FDIV, se o operando e 0
+
+LDIV:           SUB R1      ;Subtrai do primeiro operando, o segundo
+                XCH R4      ;Acumulador = R4
+                ADD R3      ;Adiciona 1 ao R4
+                XCH R4      ;R4 = R4 + 1
+                JZ FDIV
+                JNN LDIV    ;Se o numero for posivito, pula para o LDIV
+                XCH R4
+                SUB R3
+                XCH R4
+                COPY R2
+                XCH R1
+                ADD R2
+
+FDIV:           COPY R2     ;Coloca o resto em R2
+                XCH R0
+                JZ ENDIV
+                ;Se o resultado era pra ser negativo:
+                XCH R4
+                COPY R4
+                SUB R4
+                SUB R4      ;Inverte o valor de R4
+                COPY R4
+                LOAD PRIMEIRO
+                NOT         ;Nots para viabilizar o Jump
+                NOT
+                JZ ENDIV
+                ;Se o primeiro numero era negativo
+                XCH R2
+                COPY R2
+                SUB R2
+                SUB R2
+                COPY R2
+
+ENDIV:          RET
+
+;;;;;;;;;;;;
+;Constantes;
+;;;;;;;;;;;;
+DZERO:          WORD 0
+DUM:            WORD 1
+PRIMEIRO:       WORD 0
+                END

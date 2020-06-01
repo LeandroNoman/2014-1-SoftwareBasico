@@ -1,0 +1,52 @@
+        LOAD UM
+        COPY R0
+        READ                    ;Le o primeiro operando
+        COPY R1                 ;Coloca o operando em R1
+        READ                    ;Le a operacao
+        SUB R0
+        JZ L_ADD                ;Se for um add, vai para L_ADD
+        SUB R0
+        JZ L_SUB                ;Se for um sub, vai para L_SUB
+        SUB R0
+        JZ L_MULT               ;Se for um mult, vai para L_MULT
+        SUB R0
+        JZ L_DIV                ;Se for um div, vai para L_DIV
+        SUB R0
+        JZ L_EXP                ;Se for um exp, vai para L_EXP
+        HALT
+
+L_ADD:  READ                    ;Le o segundo operando
+        COPY R2                 ;Coloca o segundo operando em R2
+        CALL ADICAO             ;Chama a funcao que executa a operacao
+        WRITE
+        HALT
+
+L_SUB:  READ                    ;Le o segundo operando
+        COPY R2                 ;Coloca o segundo operando em R2
+        CALL SUBTRACAO          ;Chama a funcao que executa a operacao
+        WRITE
+        HALT
+
+L_MULT: READ                    ;Le o segundo operando
+        COPY R2                 ;Coloca o segundo operando em R2
+        CALL MULTIPLICACAO      ;Chama a funcao que executa a operacao
+        WRITE
+        HALT
+
+L_DIV:  READ                    ;Le o segundo operando
+        COPY R2                 ;Coloca o segundo operando em R2
+        CALL DIVISAO            ;Chama a funcao que executa a operacao
+        XCH R4
+        WRITE
+        XCH R2
+        WRITE
+        HALT
+
+L_EXP:  READ                    ;Le o segundo operando
+        COPY R2                 ;Coloca o segundo operando em R2
+        CALL EXPONENCIACAO      ;Chama a funcao que executa a operacao
+        WRITE
+        HALT
+
+UM:     WORD 1
+        END

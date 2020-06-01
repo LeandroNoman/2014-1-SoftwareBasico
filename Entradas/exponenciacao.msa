@@ -1,0 +1,47 @@
+EXPONENCIACAO:	XCH R2
+				COPY R3		;R3 = Expoente
+				LOAD EXUM
+				COPY R0		;R0 = 1
+				COPY R2		;R2 = 1
+				XCH R3		;Acumulador = Expoente
+
+EX_LOOP:		JZ EX_EXIT
+				SUB R0		;Subtrai 1 do expoente
+				COPY R3
+				;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+				;Parte do codigo para guardar os registradores na pilha;
+				;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+				XCH R0
+				PUSH
+				COPY R0
+				XCH R1
+				PUSH
+				COPY R1
+				XCH R3
+				PUSH
+				COPY R3
+				;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+				;Terminou de guardar os registradores na pilha;
+				;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+				CALL MULTIPLICACAO ;Realiza a multiplicacao
+				COPY R2		;Resultado volta para R2
+				;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+				;Busca os registradores da pilha;
+				;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+				POP
+				COPY R3
+				POP
+				COPY R1
+				POP
+				COPY R0
+				XCH R3
+				JMP EX_LOOP
+
+EX_EXIT:		XCH R2
+				RET
+
+;;;;;;;;;;;;
+;Constantes;
+;;;;;;;;;;;;
+EXUM: 			WORD 1
+				END
